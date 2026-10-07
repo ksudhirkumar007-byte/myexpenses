@@ -1,7 +1,7 @@
 {
   "id": "./",
-  "name": "Daily Flow Planner",
-  "short_name": "DailyFlow",
+  "name": "Expense Tracker",
+  "short_name": "My Expenses",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
