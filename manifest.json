@@ -1,0 +1,31 @@
+{
+  "id": "./",
+  "name": "Daily Flow Planner",
+  "short_name": "DailyFlow",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/flowise.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/flowise.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/flowise.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
