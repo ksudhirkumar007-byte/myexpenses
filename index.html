@@ -1658,6 +1658,12 @@
       } else {
         setSyncStatus('error');
       }
+      // Register PWA Service Worker
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js').catch((err) => {
+          console.log('SW registration skipped:', err);
+        });
+      }
     };
   </script>
 </body>
