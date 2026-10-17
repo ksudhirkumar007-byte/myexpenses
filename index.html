@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>My Expenses</title>
-    <!-- PWA & Mobile Web App Settings -->
+  <!-- PWA & Mobile Web App Settings -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#020617">
   <meta name="mobile-web-app-capable" content="yes">
@@ -161,7 +161,7 @@
         🎯 Categories & Budgets
       </button>
       <button id="viewTabBtn_analytics" onclick="switchViewTab('analytics')" class="flex-1 py-1.5 rounded-xl font-medium text-slate-400 text-center transition hover:text-slate-200">
-        📊 Analytics & Sinking
+        📊 Analytics & Tags
       </button>
     </div>
 
@@ -171,7 +171,7 @@
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
           <div class="relative flex-1">
             <i data-lucide="search" class="w-4 h-4 absolute left-3 top-2.5 text-slate-500"></i>
-            <input type="text" id="txnSearchInput" oninput="renderTransactions()" placeholder="Search description, subcategory, notes..."
+            <input type="text" id="txnSearchInput" oninput="renderTransactions()" placeholder="Search description, tag, notes..."
                    class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-8 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-emerald-500">
             <button id="clearSearchBtn" onclick="clearTransactionSearch()" class="hidden absolute right-2.5 top-2.5 text-slate-500 hover:text-slate-300">
               <i data-lucide="x" class="w-3.5 h-3.5"></i>
@@ -210,9 +210,9 @@
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-800/80">
           <div>
             <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-200 flex items-center gap-2">
-              <i data-lucide="target" class="w-4 h-4 text-cyan-400"></i> Category Budgets & Sinking Funds
+              <i data-lucide="target" class="w-4 h-4 text-cyan-400"></i> Category Budgets & Tags
             </h2>
-            <p class="text-[11px] text-slate-500 mt-0.5">Click any category card to drill down into its transactions.</p>
+            <p class="text-[11px] text-slate-500 mt-0.5">Click any category to filter transactions or view its tags.</p>
           </div>
           <button onclick="openCategoryModal()" class="px-3.5 py-1.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold flex items-center gap-1.5 transition active:scale-95 shadow-md shadow-cyan-600/30">
             <i data-lucide="plus" class="w-4 h-4"></i> New Category
@@ -223,17 +223,21 @@
       </div>
     </section>
 
-    <!-- TAB 3: Visual Analytics & Sinking Funds View -->
+    <!-- TAB 3: Visual Analytics & Tags View -->
     <section id="module_analytics" class="hidden space-y-4">
       <div class="flex items-center gap-2 bg-slate-900 border border-slate-800 p-1 rounded-xl">
         <button id="analyticsSubTab_general" onclick="switchAnalyticsSubTab('general')" class="flex-1 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-white transition">
           📊 General Breakdown
         </button>
+        <button id="analyticsSubTab_tags" onclick="switchAnalyticsSubTab('tags')" class="flex-1 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition">
+          🏷️ Tags Analytics
+        </button>
         <button id="analyticsSubTab_sinking" onclick="switchAnalyticsSubTab('sinking')" class="flex-1 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition">
-          🏦 Sinking Fund Details
+          🏦 Sinking Funds
         </button>
       </div>
 
+      <!-- General View -->
       <div id="analyticsView_general" class="space-y-4">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg">
@@ -248,8 +252,8 @@
 
           <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg">
             <div class="flex items-center justify-between mb-3">
-              <span class="text-xs font-semibold uppercase tracking-wider text-slate-300">Payment Modes (UPI / Card / Cash)</span>
-              <span class="text-[10px] font-mono bg-slate-950 px-2 py-0.5 rounded text-cyan-400 border border-slate-800">3 Modes</span>
+              <span class="text-xs font-semibold uppercase tracking-wider text-slate-300">Payment Modes</span>
+              <span class="text-[10px] font-mono bg-slate-950 px-2 py-0.5 rounded text-cyan-400 border border-slate-800">UPI / Card / Cash</span>
             </div>
             <div class="relative h-56 w-full flex items-center justify-center">
               <canvas id="paymentModeChart"></canvas>
@@ -268,6 +272,48 @@
         </div>
       </div>
 
+      <!-- NEW: Tags Analytics View -->
+      <div id="analyticsView_tags" class="hidden space-y-4">
+        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
+            <div>
+              <span class="text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                <i data-lucide="tag" class="w-4 h-4 text-emerald-400"></i> Spend by Tag Breakdown
+              </span>
+              <p class="text-[11px] text-slate-500 mt-0.5">Analyze drill-down items like Milk, Vegetables, Cleaning, etc.</p>
+            </div>
+
+            <!-- Subcategory Selector for Tags -->
+            <div class="flex items-center gap-2">
+              <label class="text-xs text-slate-400">Subcategory:</label>
+              <select id="tagAnalyticsSubcatSelect" onchange="renderTagAnalytics()" class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-emerald-500">
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="relative h-64 w-full flex items-center justify-center bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
+              <canvas id="tagAnalyticsChart"></canvas>
+            </div>
+
+            <div class="flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between text-xs text-slate-400 font-semibold mb-2 px-1">
+                  <span>Tag Item</span>
+                  <span>Amount Spent</span>
+                </div>
+                <div id="tagAnalyticsList" class="space-y-2 max-h-56 overflow-y-auto pr-1"></div>
+              </div>
+              <div id="tagTotalContainer" class="pt-2 border-t border-slate-800 text-xs flex justify-between font-mono font-bold text-slate-300 mt-2">
+                <span>Total for Category:</span>
+                <span id="tagCategoryTotal" class="text-emerald-400">₹0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sinking Funds View -->
       <div id="analyticsView_sinking" class="hidden space-y-4">
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <div class="bg-slate-900/90 border border-indigo-900/50 p-3.5 sm:p-4 rounded-2xl">
@@ -317,13 +363,13 @@
           <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg flex flex-col justify-between">
             <div>
               <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-800">
-                <span class="text-xs font-semibold uppercase tracking-wider text-slate-300">Category Budget vs Actual Spent</span>
+                <span class="text-xs font-semibold uppercase tracking-wider text-slate-300">Budget vs Actual Spent</span>
                 <span class="text-[10px] font-mono text-slate-400">Spent / Budget</span>
               </div>
               <div id="sinkingDetailedList" class="space-y-3 max-h-60 overflow-y-auto pr-1"></div>
             </div>
             <p class="text-[11px] text-slate-500 mt-3 pt-2 border-t border-slate-800">
-              💡 Non-monthly periodic reserve allocations (Insurance, Vehicle, Healthcare, Travel).
+              💡 Periodic reserve allocations (Insurance, School Fee, Healthcare, Travel).
             </p>
           </div>
         </div>
@@ -356,6 +402,7 @@
 
       <form id="expenseForm" onsubmit="handleSaveExpense(event)" class="space-y-4">
         <input type="hidden" id="expEditId" value="">
+        <input type="hidden" id="expSelectedTag" value="">
 
         <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800/90 text-center">
           <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Amount (₹)</label>
@@ -395,6 +442,17 @@
           <select id="expSubcatSelect" onchange="onSubcategoryChanged()" required
                   class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 cursor-pointer">
           </select>
+        </div>
+
+        <!-- Dynamic Single Tag Selection (Pills) -->
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="block text-xs font-medium text-slate-400">Tag (Single item)</label>
+            <span id="currentTagSelectedBadge" class="text-[10px] font-mono text-cyan-400">None selected</span>
+          </div>
+          <div id="modalTagPillsContainer" class="flex flex-wrap gap-1.5 p-2.5 rounded-xl bg-slate-950 border border-slate-800/90 min-h-[46px] items-center">
+            <span class="text-xs text-slate-500">Select a subcategory to view tags</span>
+          </div>
         </div>
 
         <div class="grid grid-cols-2 gap-3">
@@ -447,13 +505,19 @@
 
         <div>
           <label class="block text-xs font-medium text-slate-400 mb-1">Master Category</label>
-          <input type="text" id="catMasterInput" required placeholder="e.g. Needs & Essentials, Food & Dining, Utilities"
+          <input type="text" id="catMasterInput" required placeholder="e.g. Needs & Essentials, Food & Dining"
                  class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-600 focus:outline-none focus:border-cyan-500">
         </div>
 
         <div>
           <label class="block text-xs font-medium text-slate-400 mb-1">Subcategory</label>
-          <input type="text" id="catSubInput" required placeholder="e.g. Groceries & Household, Fuel, Health care"
+          <input type="text" id="catSubInput" required placeholder="e.g. Groceries & Household, Fuel"
+                 class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-600 focus:outline-none focus:border-cyan-500">
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1">Allowed Tags (Comma-separated)</label>
+          <input type="text" id="catTagsInput" placeholder="Vegetables, Fruits, Milk & Dairy, Cleaning"
                  class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-600 focus:outline-none focus:border-cyan-500">
         </div>
 
@@ -516,7 +580,7 @@
   </div>
 
   <script>
-    // ---------- Core State & Dates Engine ----------
+    // ---------- Core State & Engine ----------
     const DEFAULT_INCOME_BASELINE = 144000;
 
     const getTodayKey = () => new Date().toISOString().split('T')[0];
@@ -601,33 +665,43 @@
     }
 
     const defaultCategories = [
-      { subcategory: "Groceries & Household", masterCategory: "Needs & Essentials", budget: 15000, "Sinking Fund": "No" },
-      { subcategory: "Housing (Rent)", masterCategory: "Needs & Essentials", budget: 16000, "Sinking Fund": "No" },
-      { subcategory: "Commute & Transport", masterCategory: "Needs & Essentials", budget: 5000, "Sinking Fund": "No" },
-      { subcategory: "Utilities & Bills", masterCategory: "Needs & Essentials", budget: 3500, "Sinking Fund": "No" },
-      { subcategory: "Parents Support", masterCategory: "Needs & Essentials", budget: 8000, "Sinking Fund": "No" },
-      { subcategory: "Health care", masterCategory: "Needs & Essentials", budget: 2000, "Sinking Fund": "Yes" },
-      { subcategory: "Vehicle Maintenance", masterCategory: "Needs & Essentials", budget: 3500, "Sinking Fund": "Yes" },
-      { subcategory: "Annual Insurance", masterCategory: "Protection", budget: 8000, "Sinking Fund": "Yes" },
-      { subcategory: "Restaurants & Dining", masterCategory: "Leisure", budget: 4000, "Sinking Fund": "No" },
-      { subcategory: "Shopping & Clothes", masterCategory: "Personal", budget: 5000, "Sinking Fund": "No" },
-      { subcategory: "Salary", masterCategory: "Income", budget: 0, "Sinking Fund": "No" }
+      { subcategory: "Health care", masterCategory: "Needs & Essentials", budget: 2000, "Sinking Fund": "No", tags: ["Medicines", "Doctor Consultation", "Lab Tests", "First Aid"] },
+      { subcategory: "Commute & Transport", masterCategory: "Needs & Essentials", budget: 5000, "Sinking Fund": "No", tags: ["Fuel", "Cab & Auto", "Fastag & Toll", "Parking", "Vehicle Service"] },
+      { subcategory: "Groceries & Household", masterCategory: "Needs & Essentials", budget: 15000, "Sinking Fund": "No", tags: ["Vegetables", "Fruits", "Milk & Dairy", "Staples & Pulses", "Non-Veg", "Cleaning & Detergents", "Toiletries", "Snacks"] },
+      { subcategory: "Housing (Rent)", masterCategory: "Needs & Essentials", budget: 16000, "Sinking Fund": "No", tags: ["House Rent", "Society Maintenance"] },
+      { subcategory: "Parents Support", masterCategory: "Needs & Essentials", budget: 8000, "Sinking Fund": "No", tags: ["Parent Allowance", "Medical & Health", "Groceries & Supplies"] },
+      { subcategory: "Utilities & Bills", masterCategory: "Needs & Essentials", budget: 3500, "Sinking Fund": "No", tags: ["Electricity", "Broadband & Wi-Fi", "Mobile Recharge", "Gas Cylinder"] },
+      { subcategory: "Vinnie School Fee", masterCategory: "Needs & Essentials", budget: 4000, "Sinking Fund": "Yes", tags: ["Tuition & Term Fee", "Books & Stationery", "Uniform", "Activity & Events"] },
+      { subcategory: "Dining Out & Snacks", masterCategory: "Wants, Fitness & Growth", budget: 1500, "Sinking Fund": "No", tags: ["Weekend Dining", "Food Delivery", "Fast Food & Chaat", "Office Snacks & Drinks"] },
+      { subcategory: "Gym, Fitness & Nutrition", masterCategory: "Wants, Fitness & Growth", budget: 4250, "Sinking Fund": "No", tags: ["Gym Fee", "Protein & Supplements", "Grooming & Salon"] },
+      { subcategory: "Salary", masterCategory: "Income", budget: 0, "Sinking Fund": "No", tags: ["Paycheck", "Bonus"] }
     ];
 
-    let appData = JSON.parse(localStorage.getItem('flow_expense_state_v2')) || {
+    let appData = JSON.parse(localStorage.getItem('flow_expense_state_v3')) || {
       transactions: [],
       categories: defaultCategories,
       apiUrl: localStorage.getItem('flow_expense_api_url') || ""
     };
 
     function saveState() {
-      localStorage.setItem('flow_expense_state_v2', JSON.stringify(appData));
+      localStorage.setItem('flow_expense_state_v3', JSON.stringify(appData));
     }
 
     function getMasterCategoryForSub(subcat) {
       if (!subcat) return "Needs & Essentials";
       const match = appData.categories.find(c => c.subcategory && c.subcategory.trim().toLowerCase() === subcat.trim().toLowerCase());
       return match ? match.masterCategory : "Needs & Essentials";
+    }
+
+    function getTagsForSub(subcat) {
+      if (!subcat) return [];
+      const match = appData.categories.find(c => c.subcategory && c.subcategory.trim().toLowerCase() === subcat.trim().toLowerCase());
+      if (!match) return [];
+      if (Array.isArray(match.tags)) return match.tags;
+      if (typeof match.tags === 'string' && match.tags.trim()) {
+        return match.tags.split(',').map(t => t.trim()).filter(Boolean);
+      }
+      return [];
     }
 
     function setSyncStatus(state) {
@@ -667,7 +741,7 @@
         if (!res.ok) throw new Error("Failed to fetch");
         const json = await res.json();
 
-        // 1. Process Sheet 2: Categories (loads configuration table)
+        // 1. Process Categories
         if (json.categories && Array.isArray(json.categories)) {
           appData.categories = json.categories
             .filter(c => c && typeof c === 'object')
@@ -688,19 +762,24 @@
               if (typeof rawBudget === 'string') rawBudget = rawBudget.replace(/[^0-9.-]/g, '');
               const budget = parseFloat(rawBudget) || 0;
               const sf = extractSinkingFundFlag(c);
+              const rawTags = getField(["tags", "tag", "allowed tags"]);
+              const tagList = Array.isArray(rawTags) 
+                ? rawTags 
+                : (typeof rawTags === 'string' && rawTags.trim() ? rawTags.split(',').map(t => t.trim()).filter(Boolean) : []);
 
               return {
                 subcategory: sub,
                 masterCategory: master,
                 budget: budget,
                 "Sinking Fund": sf,
-                sinkingFund: sf
+                sinkingFund: sf,
+                tags: tagList
               };
             })
             .filter(c => c.subcategory.length > 0 && c.masterCategory.length > 0);
         }
 
-        // 2. Process Sheet 1: Expenses (preserves sheet's existing Master Category)
+        // 2. Process Expenses
         if (json.expenses && Array.isArray(json.expenses)) {
           appData.transactions = json.expenses
             .filter(row => row && typeof row === 'object')
@@ -738,6 +817,7 @@
               const notes = String(getField(["notes", "note", "remark", "remarks"]) || "").trim();
               const mode = normalizePaymentMode(getField(["payment mode", "mode", "payment method", "paymentmode"]));
               const id = String(getField(["id", "txnid", "transaction id"]) || `EXP_${Date.now()}_${idx}`);
+              const tag = String(getField(["tag", "tags"]) || "").trim();
 
               return {
                 id: id,
@@ -749,7 +829,8 @@
                 amount: parsedAmount,
                 notes: notes,
                 month: computedMonth,
-                paymentMode: mode
+                paymentMode: mode,
+                tag: tag
               };
             })
             .filter(t => t.amount > 0 || t.description !== "");
@@ -806,7 +887,8 @@
           currentMonthSpent: currentMonthSpent,
           percentUsed: percentUsed,
           "Sinking Fund": sinkingFlag,
-          sinkingFund: sinkingFlag
+          sinkingFund: sinkingFlag,
+          tags: cat.tags || []
         };
       });
     }
@@ -937,6 +1019,7 @@
         const matchesSearch = !searchVal ||
           (t.description && t.description.toLowerCase().includes(searchVal)) ||
           (t.subcategory && t.subcategory.toLowerCase().includes(searchVal)) ||
+          (t.tag && t.tag.toLowerCase().includes(searchVal)) ||
           (t.notes && t.notes.toLowerCase().includes(searchVal));
 
         const matchesCat = filterCat === 'ALL' || t.masterCategory === filterCat;
@@ -960,7 +1043,7 @@
         card.className = "flex items-center justify-between p-3 sm:p-3.5 rounded-2xl bg-slate-950 border border-slate-800/90 hover:border-slate-700/80 transition shadow-sm";
 
         const modeBadgeClass = t.paymentMode === 'UPI' 
-          ? 'bg-cyan-950/60 border-cyan-800/50 text-cyan-300'
+          ? 'bg-cyan-950/60 border-cyan-800/50 text-cyan-300' 
           : (t.paymentMode === 'Credit Card' ? 'bg-amber-950/60 border-amber-800/50 text-amber-300' : 'bg-emerald-950/60 border-emerald-800/50 text-emerald-300');
 
         card.innerHTML = `
@@ -974,6 +1057,11 @@
                 <button onclick="filterBySubcategory('${t.subcategory}')" title="Filter this subcategory" class="text-[9px] font-mono px-1.5 py-0.2 rounded border bg-slate-900 border-slate-800 text-slate-400 hover:border-emerald-500 transition">
                   ${t.subcategory}
                 </button>
+                ${t.tag ? `
+                  <button onclick="filterByTag('${t.tag}')" title="Filter this tag" class="text-[9px] font-mono px-1.5 py-0.2 rounded border bg-indigo-950/60 border-indigo-800/40 text-indigo-300 hover:border-indigo-400 transition">
+                    #${t.tag}
+                  </button>
+                ` : ''}
                 <span class="text-[9px] font-mono px-1.5 py-0.2 rounded border ${modeBadgeClass}">
                   ${t.paymentMode}
                 </span>
@@ -1012,6 +1100,13 @@
       renderTransactions();
     }
 
+    function filterByTag(tag) {
+      switchViewTab('txns');
+      const searchBox = document.getElementById('txnSearchInput');
+      searchBox.value = tag;
+      renderTransactions();
+    }
+
     function renderCategories() {
       const container = document.getElementById('categoryCardsList');
       container.innerHTML = '';
@@ -1032,6 +1127,8 @@
           statusTextColor = "text-amber-400";
         }
 
+        const tagBadges = (c.tags || []).map(t => `<span class="text-[9px] font-mono px-1 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-400">#${t}</span>`).join(' ');
+
         const card = document.createElement('div');
         card.className = "bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2.5 transition hover:border-emerald-500/60 cursor-pointer group shadow-sm";
         card.onclick = () => filterBySubcategory(c.subcategory);
@@ -1039,7 +1136,7 @@
         card.innerHTML = `
           <div class="flex items-start justify-between">
             <div>
-              <div class="flex items-center gap-1.5">
+              <div class="flex items-center gap-1.5 flex-wrap">
                 <h4 class="text-xs font-bold text-white group-hover:text-emerald-400 transition">${c.subcategory}</h4>
                 ${isSinking ? `<span class="text-[9px] uppercase font-mono px-1.5 py-0.2 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">Sinking Fund</span>` : ''}
               </div>
@@ -1054,6 +1151,8 @@
           <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden">
             <div class="h-full ${statusColor} rounded-full transition-all" style="width: ${progress}%"></div>
           </div>
+
+          ${tagBadges ? `<div class="flex flex-wrap gap-1 pt-1">${tagBadges}</div>` : ''}
 
           <div class="grid grid-cols-3 gap-2 pt-1 border-t border-slate-900 text-[10px] font-mono">
             <div>
@@ -1084,21 +1183,32 @@
     function switchAnalyticsSubTab(tab) {
       currentAnalyticsSubTab = tab;
       const gView = document.getElementById('analyticsView_general');
+      const tView = document.getElementById('analyticsView_tags');
       const sView = document.getElementById('analyticsView_sinking');
       const gBtn = document.getElementById('analyticsSubTab_general');
+      const tBtn = document.getElementById('analyticsSubTab_tags');
       const sBtn = document.getElementById('analyticsSubTab_sinking');
+
+      gView.classList.add('hidden');
+      tView.classList.add('hidden');
+      sView.classList.add('hidden');
+
+      gBtn.className = "flex-1 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition";
+      tBtn.className = "flex-1 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition";
+      sBtn.className = "flex-1 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition";
 
       if (tab === 'general') {
         gView.classList.remove('hidden');
-        sView.classList.add('hidden');
         gBtn.className = "flex-1 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-white transition";
-        sBtn.className = "flex-1 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition";
         renderGeneralAnalytics();
+      } else if (tab === 'tags') {
+        tView.classList.remove('hidden');
+        tBtn.className = "flex-1 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 text-white transition shadow";
+        populateTagAnalyticsSubcategories();
+        renderTagAnalytics();
       } else {
-        gView.classList.add('hidden');
         sView.classList.remove('hidden');
         sBtn.className = "flex-1 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white transition shadow";
-        gBtn.className = "flex-1 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition";
         renderSinkingFundAnalytics();
       }
       lucide.createIcons();
@@ -1108,6 +1218,7 @@
     let paymentModeInstance = null;
     let velocityChartInstance = null;
     let sinkingDonutInstance = null;
+    let tagBarChartInstance = null;
 
     function renderGeneralAnalytics() {
       const relevantTxns = isAllMonthsView 
@@ -1221,6 +1332,114 @@
           },
           plugins: { legend: { display: false } }
         }
+      });
+    }
+
+    // ---------- NEW: Tag Breakdown Analytics Engine ----------
+    function populateTagAnalyticsSubcategories() {
+      const select = document.getElementById('tagAnalyticsSubcatSelect');
+      const currentVal = select.value;
+      select.innerHTML = '';
+
+      const validSubs = appData.categories
+        .filter(c => !c.masterCategory.toLowerCase().includes('income'))
+        .map(c => c.subcategory);
+
+      validSubs.forEach(sub => {
+        select.innerHTML += `<option value="${sub}">${sub}</option>`;
+      });
+
+      if (validSubs.includes(currentVal)) {
+        select.value = currentVal;
+      } else if (validSubs.includes("Groceries & Household")) {
+        select.value = "Groceries & Household";
+      }
+    }
+
+    function renderTagAnalytics() {
+      const selectedSub = document.getElementById('tagAnalyticsSubcatSelect').value;
+      const relevantTxns = (isAllMonthsView 
+        ? appData.transactions 
+        : appData.transactions.filter(t => t.month === selectedMonthKey))
+        .filter(t => t.type === 'Expense' && t.subcategory && t.subcategory.trim().toLowerCase() === selectedSub.trim().toLowerCase());
+
+      const tagMap = {};
+      let totalSpend = 0;
+
+      relevantTxns.forEach(t => {
+        const amt = parseFloat(t.amount) || 0;
+        totalSpend += amt;
+        const tag = t.tag && t.tag.trim() ? t.tag.trim() : "Untagged";
+        tagMap[tag] = (tagMap[tag] || 0) + amt;
+      });
+
+      document.getElementById('tagCategoryTotal').textContent = `₹${totalSpend.toLocaleString('en-IN')}`;
+
+      const sortedTags = Object.entries(tagMap).sort((a, b) => b[1] - a[1]);
+      const labels = sortedTags.map(item => item[0]);
+      const values = sortedTags.map(item => item[1]);
+
+      // Render Bar Chart
+      const ctx = document.getElementById('tagAnalyticsChart').getContext('2d');
+      if (tagBarChartInstance) tagBarChartInstance.destroy();
+
+      tagBarChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels.length ? labels : ['No Data'],
+          datasets: [{
+            label: 'Spend (₹)',
+            data: values.length ? values : [0],
+            backgroundColor: '#10b981',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => ` ₹${ctx.raw.toLocaleString('en-IN')}`
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { color: '#64748b', font: { size: 9 }, callback: (v) => '₹' + v },
+              grid: { color: 'rgba(51, 65, 85, 0.25)' }
+            },
+            x: {
+              ticks: { color: '#94a3b8', font: { size: 10 } },
+              grid: { display: false }
+            }
+          }
+        }
+      });
+
+      // Render Table List
+      const listContainer = document.getElementById('tagAnalyticsList');
+      listContainer.innerHTML = '';
+
+      if (!sortedTags.length) {
+        listContainer.innerHTML = `<div class="p-4 text-center text-xs text-slate-500">No expenses recorded for this subcategory.</div>`;
+        return;
+      }
+
+      sortedTags.forEach(([tag, amt]) => {
+        const pct = totalSpend > 0 ? Math.round((amt / totalSpend) * 100) : 0;
+        const row = document.createElement('div');
+        row.className = "flex items-center justify-between p-2 rounded-xl bg-slate-950 border border-slate-800 text-xs";
+        row.innerHTML = `
+          <div class="flex items-center gap-2">
+            <span class="font-medium text-slate-200">${tag}</span>
+            <span class="text-[10px] text-slate-500 font-mono">(${pct}%)</span>
+          </div>
+          <span class="font-mono font-bold text-emerald-400">₹${amt.toLocaleString('en-IN')}</span>
+        `;
+        listContainer.appendChild(row);
       });
     }
 
@@ -1353,9 +1572,11 @@
                 <span class="text-[9px] font-mono px-1.5 py-0.2 rounded border bg-indigo-950/60 border-indigo-800/40 text-indigo-300">
                   ${t.subcategory}
                 </span>
-                <span class="text-[9px] font-mono px-1.5 py-0.2 rounded border bg-slate-900 border-slate-800 text-slate-400">
-                  ${t.paymentMode}
-                </span>
+                ${t.tag ? `
+                  <span class="text-[9px] font-mono px-1.5 py-0.2 rounded border bg-slate-900 border-slate-800 text-slate-300">
+                    #${t.tag}
+                  </span>
+                ` : ''}
               </div>
               <div class="text-[10px] text-slate-500 font-mono mt-0.5">${t.date} ${t.notes ? `• <span class="italic text-slate-400">${t.notes}</span>` : ''}</div>
             </div>
@@ -1371,6 +1592,7 @@
     function openAddExpenseModal() {
       document.getElementById('expenseModalTitle').innerHTML = `<i data-lucide="plus-circle" class="w-5 h-5 text-emerald-400"></i> Add New Spend`;
       document.getElementById('expEditId').value = "";
+      document.getElementById('expSelectedTag').value = "";
       document.getElementById('expAmountInput').value = "";
       document.getElementById('expDescInput').value = "";
       document.getElementById('expNotesInput').value = "";
@@ -1418,6 +1640,51 @@
       const mappedMaster = getMasterCategoryForSub(subVal);
       badge.textContent = `Mapped: ${mappedMaster}`;
       badge.classList.remove('hidden');
+
+      renderModalTagPills(subVal);
+    }
+
+    function renderModalTagPills(subcategory, preSelectedTag = "") {
+      const container = document.getElementById('modalTagPillsContainer');
+      const badge = document.getElementById('currentTagSelectedBadge');
+      const hiddenInput = document.getElementById('expSelectedTag');
+      container.innerHTML = '';
+
+      const tags = getTagsForSub(subcategory);
+      hiddenInput.value = preSelectedTag;
+      badge.textContent = preSelectedTag ? `#${preSelectedTag}` : "None selected";
+
+      if (!tags.length) {
+        container.innerHTML = '<span class="text-xs text-slate-500">No tags configured for this subcategory</span>';
+        return;
+      }
+
+      tags.forEach(tag => {
+        const btn = document.createElement('button');
+        btn.type = "button";
+        const isSelected = preSelectedTag === tag;
+        btn.className = isSelected 
+          ? "px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-600 text-white border border-emerald-500 shadow-sm transition"
+          : "px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-900 border border-slate-800 text-slate-300 hover:border-slate-700 transition";
+        btn.textContent = tag;
+
+        btn.onclick = () => {
+          if (hiddenInput.value === tag) {
+            hiddenInput.value = "";
+            badge.textContent = "None selected";
+            btn.className = "px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-900 border border-slate-800 text-slate-300 hover:border-slate-700 transition";
+          } else {
+            hiddenInput.value = tag;
+            badge.textContent = `#${tag}`;
+            container.querySelectorAll('button').forEach(b => {
+              b.className = "px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-900 border border-slate-800 text-slate-300 hover:border-slate-700 transition";
+            });
+            btn.className = "px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-600 text-white border border-emerald-500 shadow-sm transition";
+          }
+        };
+
+        container.appendChild(btn);
+      });
     }
 
     async function handleSaveExpense(e) {
@@ -1428,6 +1695,7 @@
       const desc = document.getElementById('expDescInput').value.trim();
       const subCat = document.getElementById('expSubcatSelect').value;
       const masterCat = getMasterCategoryForSub(subCat);
+      const tagVal = document.getElementById('expSelectedTag').value.trim();
       const dateVal = document.getElementById('expDateInput').value;
       const paymentMode = document.getElementById('expPaymentModeSelect').value;
       const notes = document.getElementById('expNotesInput').value.trim();
@@ -1447,7 +1715,8 @@
         amount: amount,
         notes: notes,
         month: monthKey,
-        paymentMode: paymentMode
+        paymentMode: paymentMode,
+        tag: tagVal
       };
 
       if (editId) {
@@ -1519,6 +1788,7 @@
       document.getElementById('catEditKey').value = "";
       document.getElementById('catMasterInput').value = "";
       document.getElementById('catSubInput').value = "";
+      document.getElementById('catTagsInput').value = "";
       document.getElementById('catBudgetInput').value = "";
       document.getElementById('catSinkingSelect').value = "No";
       document.getElementById('categoryModal').classList.remove('hidden');
@@ -1533,10 +1803,13 @@
       e.preventDefault();
       const master = document.getElementById('catMasterInput').value.trim();
       const sub = document.getElementById('catSubInput').value.trim();
+      const tagsStr = document.getElementById('catTagsInput').value.trim();
       const budget = parseFloat(document.getElementById('catBudgetInput').value) || 0;
       const sinking = document.getElementById('catSinkingSelect').value;
 
       if (!master || !sub) return;
+
+      const tagList = tagsStr ? tagsStr.split(',').map(t => t.trim()).filter(Boolean) : [];
 
       const existingIndex = appData.categories.findIndex(c => c.subcategory.toLowerCase() === sub.toLowerCase());
       const categoryEntry = { 
@@ -1544,7 +1817,8 @@
         masterCategory: master, 
         budget, 
         "Sinking Fund": sinking,
-        sinkingFund: sinking 
+        sinkingFund: sinking,
+        tags: tagList
       };
 
       if (existingIndex >= 0) {
@@ -1562,7 +1836,6 @@
       }
     }
 
-    // Sync only raw configuration columns to Google Sheets
     async function syncCategoriesToRemote() {
       setSyncStatus('syncing');
       try {
@@ -1577,7 +1850,8 @@
                 subcategory: c.subcategory,
                 masterCategory: c.masterCategory,
                 budget: c.budget,
-                "Sinking Fund": c["Sinking Fund"] || c.sinkingFund || "No"
+                "Sinking Fund": c["Sinking Fund"] || c.sinkingFund || "No",
+                tags: Array.isArray(c.tags) ? c.tags.join(', ') : (c.tags || "")
               }))
             }
           })
@@ -1630,6 +1904,9 @@
       if (tab === 'analytics') {
         if (currentAnalyticsSubTab === 'general') {
           renderGeneralAnalytics();
+        } else if (currentAnalyticsSubTab === 'tags') {
+          populateTagAnalyticsSubcategories();
+          renderTagAnalytics();
         } else {
           renderSinkingFundAnalytics();
         }
@@ -1644,6 +1921,9 @@
       if (activeTab === 'analytics') {
         if (currentAnalyticsSubTab === 'general') {
           renderGeneralAnalytics();
+        } else if (currentAnalyticsSubTab === 'tags') {
+          populateTagAnalyticsSubcategories();
+          renderTagAnalytics();
         } else {
           renderSinkingFundAnalytics();
         }
@@ -1660,7 +1940,7 @@
       }
       // Register PWA Service Worker
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js',{ scope: '/myexpenses/' }).catch((err) => {
+        navigator.serviceWorker.register('./sw.js', { scope: '/myexpenses/' }).catch((err) => {
           console.log('SW registration skipped:', err);
         });
       }
