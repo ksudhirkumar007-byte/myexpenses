@@ -1660,7 +1660,7 @@
       }
       // Register PWA Service Worker
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js').catch((err) => {
+        navigator.serviceWorker.register('./sw.js',{ scope: '/myexpenses/' }).catch((err) => {
           console.log('SW registration skipped:', err);
         });
       }
