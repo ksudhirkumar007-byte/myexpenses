@@ -1,9 +1,9 @@
 {
-  "id": "./",
+  "id": "/myexpenses/",
   "name": "Expense Tracker",
   "short_name": "My Expenses",
-  "start_url": "./",
-  "scope": "./",
+  "start_url": "/myexpenses/",
+  "scope": "/myexpenses/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#020617",
