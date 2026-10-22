@@ -2119,7 +2119,7 @@
         setSyncStatus('error');
       }
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js', { scope: '/myexpenses/' }).catch((err) => {
+        navigator.serviceWorker.register('./sw.js', { scope: '/' }).catch((err) => {
           console.log('SW registration skipped:', err);
         });
       }
