@@ -1798,7 +1798,16 @@
       if (!availableCategories.length) {
         subSelect.innerHTML = `<option value="${type === 'Income' ? 'Salary' : 'General'}">${type === 'Income' ? 'Salary' : 'General'}</option>`;
       }
-
+// --- DEFAULT SELECTION LOGIC ---
+      if (type === 'Expense') {
+        // Look for 'Groceries & Household' (or any subcategory containing 'grocer')
+        const defaultGroceries = availableCategories.find(c => 
+          c.subcategory.toLowerCase().includes('grocer')
+        );
+        if (defaultGroceries) {
+          subSelect.value = defaultGroceries.subcategory;
+        }
+      }
       onSubcategoryChanged();
     }
 
