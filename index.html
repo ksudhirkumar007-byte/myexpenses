@@ -592,7 +592,7 @@
 
         <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-800">
           <button type="button" onclick="closeCategoryModal()" class="px-4 py-2 rounded-xl text-xs font-medium text-slate-400 hover:text-white transition">Cancel</button>
-          <button type="submit" class="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-xs font-semibold text-white transition active:scale-95 shadow-md">
+          <button type="submit" class="px-4 py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-xs font-semibold text-white transition active:scale-95 shadow-md">
             Save Category
           </button>
         </div>
@@ -640,6 +640,15 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Floating Action Button (Mobile Thumb-Zone) -->
+  <div class="fixed bottom-6 right-5 z-40 sm:hidden">
+    <button onclick="openAddExpenseModal()" 
+            title="Add Expense"
+            class="w-14 h-14 rounded-2xl bg-emerald-500 hover:bg-emerald-400 active:scale-90 text-slate-950 shadow-xl shadow-emerald-500/40 flex items-center justify-center transition-transform border border-emerald-400/50">
+      <i data-lucide="plus" class="w-6 h-6 stroke-[2.5]"></i>
+    </button>
   </div>
 
   <script>
@@ -1798,7 +1807,7 @@
       if (!availableCategories.length) {
         subSelect.innerHTML = `<option value="${type === 'Income' ? 'Salary' : 'General'}">${type === 'Income' ? 'Salary' : 'General'}</option>`;
       }
-// --- DEFAULT SELECTION LOGIC ---
+      // --- DEFAULT SELECTION LOGIC ---
       if (type === 'Expense') {
         // Look for 'Groceries & Household' (or any subcategory containing 'grocer')
         const defaultGroceries = availableCategories.find(c => 
@@ -2131,6 +2140,9 @@
         navigator.serviceWorker.register('./sw.js', { scope: '/' }).catch((err) => {
           console.log('SW registration skipped:', err);
         });
+      }
+      if (window.lucide && window.lucide.createIcons) {
+        lucide.createIcons();
       }
     };
   </script>
