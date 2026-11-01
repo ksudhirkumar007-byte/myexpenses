@@ -329,44 +329,60 @@
 
       <!-- Sinking Funds View -->
       <div id="analyticsView_sinking" class="hidden space-y-4">
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div class="bg-slate-900/90 border border-indigo-900/50 p-3.5 sm:p-4 rounded-2xl">
-            <span class="text-[11px] font-medium text-indigo-300 flex items-center gap-1.5 mb-1">
-              <i data-lucide="piggy-bank" class="w-4 h-4"></i> Monthly Target
-            </span>
-            <div id="sinkingKpiTarget" class="text-lg sm:text-xl font-bold font-mono text-indigo-400">₹0</div>
-            <span class="text-[10px] text-slate-500 font-mono mt-0.5 block">Budgeted reserve</span>
+        <!-- Dual Hero Cards: Spend This Month & Running Reserve -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <!-- CARD 1: Sinking Spend This Month -->
+          <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-rose-950/30 border border-rose-900/40 p-4 rounded-2xl relative overflow-hidden shadow-lg">
+            <div class="flex items-center justify-between text-xs font-semibold text-rose-300 mb-1.5">
+              <span class="flex items-center gap-1.5">
+                <i data-lucide="arrow-down-circle" class="w-4 h-4 text-rose-400"></i> Spent This Month
+              </span>
+              <span id="sinkSpendMonthBadge" class="text-[10px] font-mono bg-rose-950/80 border border-rose-800/50 px-2 py-0.5 rounded text-rose-200">Selected Month</span>
+            </div>
+            <div id="sinkingKpiCurrentMonthSpent" class="text-2xl sm:text-3xl font-bold font-mono text-rose-400">₹0</div>
+            <span id="sinkingKpiSpendSubline" class="text-[10px] text-slate-400 font-mono mt-1 block">0 transactions in sinking categories</span>
           </div>
 
-          <div class="bg-slate-900/90 border border-slate-800 p-3.5 sm:p-4 rounded-2xl">
-            <span class="text-[11px] font-medium text-rose-300 flex items-center gap-1.5 mb-1">
-              <i data-lucide="arrow-down-circle" class="w-4 h-4 text-rose-400"></i> Spent (Selected Period)
-            </span>
-            <div id="sinkingKpiSpent" class="text-lg sm:text-xl font-bold font-mono text-rose-400">₹0</div>
-            <span id="sinkingKpiSpentPercent" class="text-[10px] text-slate-500 font-mono mt-0.5 block">0% of target</span>
-          </div>
-
-          <div class="bg-slate-900/90 border border-emerald-900/50 p-3.5 sm:p-4 rounded-2xl">
-            <span class="text-[11px] font-medium text-emerald-300 flex items-center gap-1.5 mb-1">
-              <i data-lucide="shield-check" class="w-4 h-4"></i> Retained Reserve
-            </span>
-            <div id="sinkingKpiNet" class="text-lg sm:text-xl font-bold font-mono text-emerald-400">₹0</div>
-            <span class="text-[10px] text-emerald-500/80 font-mono mt-0.5 block">Saved this period</span>
-          </div>
-
-          <div class="bg-slate-900/90 border border-amber-900/40 p-3.5 sm:p-4 rounded-2xl">
-            <span class="text-[11px] font-medium text-amber-300 flex items-center gap-1.5 mb-1">
-              <i data-lucide="history" class="w-4 h-4"></i> All-Time Spent
-            </span>
-            <div id="sinkingKpiAllTimeSpent" class="text-lg sm:text-xl font-bold font-mono text-amber-400">₹0</div>
-            <span id="sinkingFundCountBadge" class="text-[10px] text-slate-500 font-mono mt-0.5 block">0 categories</span>
+          <!-- CARD 2: Total Sinking Reserve Remaining -->
+          <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950/40 border border-indigo-500/40 p-4 rounded-2xl relative overflow-hidden shadow-lg">
+            <div class="flex items-center justify-between text-xs font-semibold text-indigo-300 mb-1.5">
+              <span class="flex items-center gap-1.5">
+                <i data-lucide="vault" class="w-4 h-4 text-indigo-400"></i> Total Reserve Remaining
+              </span>
+              <button onclick="openSinkingDepositModal()" class="px-2 py-0.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-semibold flex items-center gap-1 transition shadow">
+                <i data-lucide="plus" class="w-3 h-3"></i> Add Deposit
+              </button>
+            </div>
+            <div id="sinkingKpiTotalReserveRemaining" class="text-2xl sm:text-3xl font-bold font-mono text-emerald-400">₹0</div>
+            <span id="sinkingKpiReserveSubline" class="text-[10px] text-slate-400 font-mono mt-1 block">Baseline ₹46,000 + Deposits - All-time spend</span>
           </div>
         </div>
 
+        <!-- Secondary Breakdown Cards -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          <div class="bg-slate-950/80 border border-slate-800 p-3 rounded-xl">
+            <span class="text-[10px] font-medium text-slate-500 block">Baseline Anchor</span>
+            <span class="text-sm font-bold font-mono text-slate-300">₹46,000</span>
+          </div>
+          <div class="bg-slate-950/80 border border-slate-800 p-3 rounded-xl">
+            <span class="text-[10px] font-medium text-slate-500 block">Deposits (This Mo)</span>
+            <span id="sinkingKpiCurrentMonthDeposit" class="text-sm font-bold font-mono text-indigo-400">₹0</span>
+          </div>
+          <div class="bg-slate-950/80 border border-slate-800 p-3 rounded-xl">
+            <span class="text-[10px] font-medium text-slate-500 block">Total Deposited</span>
+            <span id="sinkingKpiAllTimeDeposits" class="text-sm font-bold font-mono text-indigo-300">₹0</span>
+          </div>
+          <div class="bg-slate-950/80 border border-slate-800 p-3 rounded-xl">
+            <span class="text-[10px] font-medium text-slate-500 block">All-Time Spent</span>
+            <span id="sinkingKpiAllTimeSpentTotal" class="text-sm font-bold font-mono text-rose-400">₹0</span>
+          </div>
+        </div>
+
+        <!-- Charts and Progress -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg">
             <div class="flex items-center justify-between mb-3">
-              <span class="text-xs font-semibold uppercase tracking-wider text-slate-300">Sinking Expenses Spent</span>
+              <span class="text-xs font-semibold uppercase tracking-wider text-slate-300">Sinking Expenses Breakdown</span>
               <span class="text-[10px] font-mono bg-rose-950/60 text-rose-300 border border-rose-800/50 px-2 py-0.5 rounded">Actual Spent</span>
             </div>
             <div class="relative h-56 w-full flex items-center justify-center">
@@ -377,23 +393,24 @@
           <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg flex flex-col justify-between">
             <div>
               <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-800">
-                <span class="text-xs font-semibold uppercase tracking-wider text-slate-300">Budget vs Actual Spent</span>
-                <span class="text-[10px] font-mono text-slate-400">Spent / Budget</span>
+                <span class="text-xs font-semibold uppercase tracking-wider text-slate-300">Target vs Actual Spent</span>
+                <span class="text-[10px] font-mono text-slate-400">Spent / Target</span>
               </div>
               <div id="sinkingDetailedList" class="space-y-3 max-h-60 overflow-y-auto pr-1"></div>
             </div>
             <p class="text-[11px] text-slate-500 mt-3 pt-2 border-t border-slate-800">
-              💡 Periodic reserve allocations (Insurance, School Fee, Healthcare, Travel).
+              💡 Use "Add Deposit" when moving monthly reserves to your separate account.
             </p>
           </div>
         </div>
 
-        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg">
+        <!-- Combined Sinking Ledger -->
+        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-lg">
           <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-800">
             <span class="text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-2">
-              <i data-lucide="receipt" class="w-4 h-4 text-indigo-400"></i> Expenses Under Sinking Fund Categories
+              <i data-lucide="receipt" class="w-4 h-4 text-indigo-400"></i> Sinking Ledger (Deposits & Expenses)
             </span>
-            <span id="sinkingTxnCountBadge" class="text-[10px] font-mono text-indigo-300 bg-indigo-950/60 px-2 py-0.5 rounded border border-indigo-800/40">0 transactions</span>
+            <span id="sinkingTxnCountBadge" class="text-[10px] font-mono text-indigo-300 bg-indigo-950/60 px-2 py-0.5 rounded border border-indigo-800/40">0 items</span>
           </div>
           <div id="sinkingTxnList" class="space-y-2 max-h-56 overflow-y-auto pr-1"></div>
         </div>
@@ -542,6 +559,57 @@
     </div>
   </div>
 
+  <!-- MODAL: Log Monthly Sinking Deposit -->
+  <div id="sinkingDepositModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-5 sm:p-6 shadow-2xl relative my-auto">
+      <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <i data-lucide="piggy-bank" class="w-5 h-5 text-indigo-400"></i> Log Sinking Deposit
+        </h3>
+        <button onclick="closeSinkingDepositModal()" class="text-slate-400 hover:text-white p-1 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form onsubmit="handleSaveSinkingDeposit(event)" class="space-y-4">
+        <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800/90 text-center">
+          <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Amount Transferred (₹)</label>
+          <div class="flex items-center justify-center gap-1">
+            <span class="text-2xl font-bold font-mono text-indigo-400">₹</span>
+            <input type="number" step="any" id="sinkDepositAmount" required placeholder="31700"
+                   class="w-48 bg-transparent text-center text-3xl font-mono font-bold text-white focus:outline-none placeholder-slate-700">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-1">Transfer Date</label>
+            <input type="date" id="sinkDepositDate" required
+                   class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-slate-200 font-mono focus:outline-none focus:border-indigo-500 cursor-pointer">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-1">Destination Account</label>
+            <input type="text" id="sinkDepositAccount" value="Sinking Bank A/c"
+                   class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1">Notes / Breakdown (Optional)</label>
+          <input type="text" id="sinkDepositNotes" placeholder="e.g. School fee + Insurance monthly reserve"
+                 class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500">
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-800">
+          <button type="button" onclick="closeSinkingDepositModal()" class="px-4 py-2 rounded-xl text-xs font-medium text-slate-400 hover:text-white transition">Cancel</button>
+          <button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white transition active:scale-95 shadow-md shadow-indigo-600/30">
+            Save Deposit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- MODAL: Create / Edit Category & Budget -->
   <div id="categoryModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4 overflow-y-auto">
     <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-6 shadow-2xl relative my-auto">
@@ -653,6 +721,7 @@
 
   <script>
     // ---------- Core State & Engine ----------
+    const SINKING_BASELINE_AMOUNT = 46000;
     const getTodayKey = () => new Date().toISOString().split('T')[0];
 
     function getMonthKeyFromDate(dateStr) {
@@ -897,18 +966,25 @@
               }
 
               const desc = String(getField(["description", "item", "merchant", "payee", "desc"]) || subcat).trim();
-              const type = String(getField(["type", "transaction type"]) || "Expense").trim();
+              const rawType = String(getField(["type", "transaction type"]) || "Expense").trim();
               const notes = String(getField(["notes", "note", "remark", "remarks"]) || "").trim();
               const mode = normalizePaymentMode(getField(["payment mode", "mode", "payment method", "paymentmode"]));
               const id = String(getField(["id", "txnid", "transaction id"]) || `EXP_${Date.now()}_${idx}`);
               const tag = String(getField(["tag", "tags"]) || "").trim();
+
+              let finalType = 'Expense';
+              if (rawType.toLowerCase() === 'sinking deposit' || rawType.toLowerCase() === 'sinking_deposit') {
+                finalType = 'Sinking Deposit';
+              } else if (rawType.toLowerCase() === 'income' || master.toLowerCase() === 'income') {
+                finalType = 'Income';
+              }
 
               return {
                 id: id,
                 date: cleanDate,
                 subcategory: subcat,
                 masterCategory: master,
-                type: (type.toLowerCase() === 'income' || master.toLowerCase() === 'income') ? 'Income' : 'Expense',
+                type: finalType,
                 description: desc,
                 amount: parsedAmount,
                 notes: notes,
@@ -1134,6 +1210,7 @@
 
       filtered.forEach(t => {
         const isExp = t.type === 'Expense';
+        const isDeposit = t.type === 'Sinking Deposit';
         const card = document.createElement('div');
         card.className = "flex items-center justify-between p-3 sm:p-3.5 rounded-2xl bg-slate-950 border border-slate-800/90 hover:border-slate-700/80 transition shadow-sm";
 
@@ -1141,10 +1218,27 @@
           ? 'bg-cyan-950/60 border-cyan-800/50 text-cyan-300' 
           : (t.paymentMode === 'Credit Card' ? 'bg-amber-950/60 border-amber-800/50 text-amber-300' : 'bg-emerald-950/60 border-emerald-800/50 text-emerald-300');
 
+        let iconBadgeClass = 'bg-rose-950/60 text-rose-400 border border-rose-800/40';
+        let iconName = 'arrow-down-left';
+        let amountClass = 'text-rose-400';
+        let amountPrefix = '-';
+
+        if (isDeposit) {
+          iconBadgeClass = 'bg-indigo-950/60 text-indigo-400 border border-indigo-800/40';
+          iconName = 'piggy-bank';
+          amountClass = 'text-indigo-400';
+          amountPrefix = '+';
+        } else if (!isExp) {
+          iconBadgeClass = 'bg-emerald-950/60 text-emerald-400 border border-emerald-800/40';
+          iconName = 'arrow-up-right';
+          amountClass = 'text-emerald-400';
+          amountPrefix = '+';
+        }
+
         card.innerHTML = `
           <div class="flex items-center gap-3 min-w-0 flex-1 pr-2">
-            <div class="w-9 h-9 rounded-xl ${isExp ? 'bg-rose-950/60 text-rose-400 border border-rose-800/40' : 'bg-emerald-950/60 text-emerald-400 border border-emerald-800/40'} flex items-center justify-center flex-shrink-0 text-sm">
-              <i data-lucide="${isExp ? 'arrow-down-left' : 'arrow-up-right'}" class="w-4 h-4"></i>
+            <div class="w-9 h-9 rounded-xl ${iconBadgeClass} flex items-center justify-center flex-shrink-0 text-sm">
+              <i data-lucide="${iconName}" class="w-4 h-4"></i>
             </div>
             <div class="min-w-0">
               <div class="flex items-center gap-1.5 flex-wrap">
@@ -1168,8 +1262,8 @@
           </div>
 
           <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
-            <span class="text-sm sm:text-base font-bold font-mono ${isExp ? 'text-rose-400' : 'text-emerald-400'}">
-              ${isExp ? '-' : '+'}₹${parseFloat(t.amount).toLocaleString('en-IN')}
+            <span class="text-sm sm:text-base font-bold font-mono ${amountClass}">
+              ${amountPrefix}₹${parseFloat(t.amount).toLocaleString('en-IN')}
             </span>
             <button onclick="openEditExpenseModal('${t.id}')" title="Edit Entry" class="text-slate-600 hover:text-emerald-400 p-1.5 rounded-lg transition hover:bg-slate-900">
               <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
@@ -1185,6 +1279,7 @@
 
       lucide.createIcons();
     }
+
     function clearTransactionSearch() {
       document.getElementById('txnSearchInput').value = "";
       renderTransactions();
@@ -1619,41 +1714,112 @@
       document.getElementById('tagDrilldownModal').classList.add('hidden');
     }
 
+    // ---------- Sinking Fund Management & Ledger ----------
+    function openSinkingDepositModal() {
+      document.getElementById('sinkDepositAmount').value = "31700";
+      document.getElementById('sinkDepositDate').value = getTodayKey();
+      document.getElementById('sinkDepositNotes').value = "";
+      document.getElementById('sinkingDepositModal').classList.remove('hidden');
+      lucide.createIcons();
+      document.getElementById('sinkDepositAmount').focus();
+    }
+
+    function closeSinkingDepositModal() {
+      document.getElementById('sinkingDepositModal').classList.add('hidden');
+    }
+
+    async function handleSaveSinkingDeposit(e) {
+      e.preventDefault();
+      const amt = parseFloat(document.getElementById('sinkDepositAmount').value) || 0;
+      const dVal = document.getElementById('sinkDepositDate').value;
+      const acct = document.getElementById('sinkDepositAccount').value.trim();
+      const notes = document.getElementById('sinkDepositNotes').value.trim();
+
+      if (amt <= 0 || !dVal) return;
+
+      const depositTxn = {
+        id: `SINK_DEP_${Date.now()}`,
+        date: dVal,
+        month: getMonthKeyFromDate(dVal),
+        subcategory: "Sinking Fund Deposit",
+        masterCategory: "Wealth & Protection",
+        type: "Sinking Deposit",
+        description: `Transfer to ${acct}`,
+        amount: amt,
+        paymentMode: "Net Banking",
+        tag: "SinkingReserve",
+        notes: notes
+      };
+
+      appData.transactions.unshift(depositTxn);
+      saveState();
+      closeSinkingDepositModal();
+      renderAll();
+
+      if (appData.apiUrl && appData.apiUrl.startsWith('http')) {
+        setSyncStatus('syncing');
+        try {
+          const res = await fetch(appData.apiUrl, {
+            method: "POST",
+            redirect: "follow",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ action: "addExpense", data: depositTxn })
+          });
+          setSyncStatus(res.ok ? 'synced' : 'error');
+        } catch {
+          setSyncStatus('error');
+        }
+      }
+    }
+
     function renderSinkingFundAnalytics() {
       const summaries = computeCategorySummaries();
       const sinkingCategories = summaries.filter(c => isSinkingCategory(c));
       const sinkingNames = new Set(sinkingCategories.map(c => c.subcategory.trim().toLowerCase()));
 
-      const relevantTxns = isAllMonthsView 
-        ? appData.transactions.filter(t => t.type === 'Expense' && sinkingNames.has(String(t.subcategory || '').trim().toLowerCase()))
-        : appData.transactions.filter(t => t.month === selectedMonthKey && t.type === 'Expense' && sinkingNames.has(String(t.subcategory || '').trim().toLowerCase()));
+      const allTxns = appData.transactions || [];
 
-      let totalTarget = 0;
-      let totalSpent = 0;
-      let allTimeSpent = 0;
+      const allSinkingExpenses = allTxns.filter(t => 
+        t.type === 'Expense' && sinkingNames.has(String(t.subcategory || '').trim().toLowerCase())
+      );
+      const allSinkingDeposits = allTxns.filter(t => t.type === 'Sinking Deposit');
 
-      sinkingCategories.forEach(c => {
-        totalTarget += c.budget;
-        totalSpent += c.currentMonthSpent;
-        allTimeSpent += c.totalSpent;
-      });
+      const periodExpenses = isAllMonthsView 
+        ? allSinkingExpenses 
+        : allSinkingExpenses.filter(t => t.month === selectedMonthKey);
 
-      const retainedReserve = Math.max(0, totalTarget - totalSpent);
-      const spentPercent = totalTarget > 0 ? Math.round((totalSpent / totalTarget) * 100) : 0;
+      const periodDeposits = isAllMonthsView
+        ? allSinkingDeposits
+        : allSinkingDeposits.filter(t => t.month === selectedMonthKey);
 
-      document.getElementById('sinkingKpiTarget').textContent = `₹${totalTarget.toLocaleString('en-IN')}`;
-      document.getElementById('sinkingKpiSpent').textContent = `₹${totalSpent.toLocaleString('en-IN')}`;
-      document.getElementById('sinkingKpiSpentPercent').textContent = `${spentPercent}% of target`;
-      document.getElementById('sinkingKpiNet').textContent = `₹${retainedReserve.toLocaleString('en-IN')}`;
-      document.getElementById('sinkingKpiAllTimeSpent').textContent = `₹${allTimeSpent.toLocaleString('en-IN')}`;
-      document.getElementById('sinkingFundCountBadge').textContent = `${sinkingCategories.length} categories`;
-      document.getElementById('sinkingTxnCountBadge').textContent = `${relevantTxns.length} transactions`;
+      const currentMonthSpent = periodExpenses.reduce((s, t) => s + (parseFloat(t.amount) || 0), 0);
+      const currentMonthDeposit = periodDeposits.reduce((s, t) => s + (parseFloat(t.amount) || 0), 0);
+      const totalAllTimeDeposited = allSinkingDeposits.reduce((s, t) => s + (parseFloat(t.amount) || 0), 0);
+      const totalAllTimeSpent = allSinkingExpenses.reduce((s, t) => s + (parseFloat(t.amount) || 0), 0);
 
+      // Running Reserve in Bank = Baseline (₹46,000) + All Sinking Deposits - All Sinking Expenses
+      const totalRemainingReserve = SINKING_BASELINE_AMOUNT + totalAllTimeDeposited - totalAllTimeSpent;
+
+      // Card 1: Spent This Month
+      document.getElementById('sinkingKpiCurrentMonthSpent').textContent = `₹${currentMonthSpent.toLocaleString('en-IN')}`;
+      document.getElementById('sinkingKpiSpendSubline').textContent = `${periodExpenses.length} expense transactions in sinking categories`;
+      document.getElementById('sinkSpendMonthBadge').textContent = isAllMonthsView ? "All-Time" : formatMonthDisplay(selectedMonthKey);
+
+      // Card 2: Total Reserve Remaining
+      const reserveElem = document.getElementById('sinkingKpiTotalReserveRemaining');
+      reserveElem.textContent = `₹${totalRemainingReserve.toLocaleString('en-IN')}`;
+      reserveElem.className = `text-2xl sm:text-3xl font-bold font-mono ${totalRemainingReserve >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+      document.getElementById('sinkingKpiReserveSubline').textContent = `Baseline (₹${SINKING_BASELINE_AMOUNT.toLocaleString('en-IN')}) + ₹${totalAllTimeDeposited.toLocaleString('en-IN')} dep - ₹${totalAllTimeSpent.toLocaleString('en-IN')} spent`;
+
+      // Secondary summary items
+      document.getElementById('sinkingKpiCurrentMonthDeposit').textContent = `₹${currentMonthDeposit.toLocaleString('en-IN')}`;
+      document.getElementById('sinkingKpiAllTimeDeposits').textContent = `₹${totalAllTimeDeposited.toLocaleString('en-IN')}`;
+      document.getElementById('sinkingKpiAllTimeSpentTotal').textContent = `₹${totalAllTimeSpent.toLocaleString('en-IN')}`;
+
+      // Sinking categories chart
       const spendingBySinkingCat = {};
-      sinkingCategories.forEach(sc => {
-        if (sc.currentMonthSpent > 0) {
-          spendingBySinkingCat[sc.subcategory] = sc.currentMonthSpent;
-        }
+      periodExpenses.forEach(t => {
+        spendingBySinkingCat[t.subcategory] = (spendingBySinkingCat[t.subcategory] || 0) + (parseFloat(t.amount) || 0);
       });
 
       const spentLabels = Object.keys(spendingBySinkingCat);
@@ -1686,7 +1852,7 @@
             tooltip: {
               callbacks: {
                 label: function(context) {
-                  if (!spentLabels.length) return 'No expenses logged';
+                  if (!spentLabels.length) return ' No expenses logged';
                   return ` ${context.label}: ₹${context.raw.toLocaleString('en-IN')}`;
                 }
               }
@@ -1696,6 +1862,7 @@
         }
       });
 
+      // Target vs Actual Category list
       const listContainer = document.getElementById('sinkingDetailedList');
       listContainer.innerHTML = '';
 
@@ -1731,32 +1898,37 @@
         });
       }
 
+      // Sinking Combined Ledger (Deposits + Outflows)
+      const combinedTxns = isAllMonthsView
+        ? [...allSinkingExpenses, ...allSinkingDeposits]
+        : [...periodExpenses, ...periodDeposits];
+
+      combinedTxns.sort((a, b) => b.date.localeCompare(a.date));
+
       const txnContainer = document.getElementById('sinkingTxnList');
       txnContainer.innerHTML = '';
+      document.getElementById('sinkingTxnCountBadge').textContent = `${combinedTxns.length} items`;
 
-      if (!relevantTxns.length) {
-        txnContainer.innerHTML = `<div class="p-3 text-center text-xs text-slate-500">No expenses logged under Sinking Fund categories.</div>`;
+      if (!combinedTxns.length) {
+        txnContainer.innerHTML = `<div class="p-3 text-center text-xs text-slate-500">No activity recorded for this period.</div>`;
       } else {
-        relevantTxns.sort((a, b) => b.date.localeCompare(a.date));
-        relevantTxns.forEach(t => {
+        combinedTxns.forEach(t => {
+          const isDeposit = t.type === 'Sinking Deposit';
           const row = document.createElement('div');
           row.className = "flex items-center justify-between p-2.5 rounded-xl bg-slate-950 border border-slate-800/80 text-xs";
           row.innerHTML = `
             <div class="min-w-0 pr-2">
               <div class="flex items-center gap-1.5 flex-wrap">
                 <span class="font-semibold text-slate-200 truncate">${t.description || t.subcategory}</span>
-                <span class="text-[9px] font-mono px-1.5 py-0.2 rounded border bg-indigo-950/60 border-indigo-800/40 text-indigo-300">
-                  ${t.subcategory}
+                <span class="text-[9px] font-mono px-1.5 py-0.2 rounded border ${isDeposit ? 'bg-indigo-950/60 border-indigo-800/40 text-indigo-300' : 'bg-slate-900 border-slate-800 text-slate-400'}">
+                  ${isDeposit ? 'Deposit' : t.subcategory}
                 </span>
-                ${t.tag ? `
-                  <span class="text-[9px] font-mono px-1.5 py-0.2 rounded border bg-slate-900 border-slate-800 text-slate-300">
-                    #${t.tag}
-                  </span>
-                ` : ''}
               </div>
               <div class="text-[10px] text-slate-500 font-mono mt-0.5">${t.date} ${t.notes ? `• <span class="italic text-slate-400">${t.notes}</span>` : ''}</div>
             </div>
-            <span class="font-mono font-bold text-rose-400 flex-shrink-0">-₹${parseFloat(t.amount).toLocaleString('en-IN')}</span>
+            <span class="font-mono font-bold flex-shrink-0 ${isDeposit ? 'text-indigo-400' : 'text-rose-400'}">
+              ${isDeposit ? '+' : '-'}₹${parseFloat(t.amount).toLocaleString('en-IN')}
+            </span>
           `;
           txnContainer.appendChild(row);
         });
@@ -1782,6 +1954,7 @@
       lucide.createIcons();
       document.getElementById('expAmountInput').focus();
     }
+
     function openEditExpenseModal(id) {
       const txn = appData.transactions.find(t => t.id === id);
       if (!txn) return;
@@ -1794,21 +1967,17 @@
       document.getElementById('expDateInput').value = txn.date;
       document.getElementById('expPaymentModeSelect').value = txn.paymentMode || "UPI";
 
-      // Match radio type
       const isIncome = txn.type === 'Income';
       document.querySelector(`input[name="expType"][value="${isIncome ? 'Income' : 'Expense'}"]`).checked = true;
 
-      // Populate subcategories for that type
       populateModalSubcategories();
 
-      // Set subcategory value
       const subSelect = document.getElementById('expSubcatSelect');
       if (txn.subcategory) {
         subSelect.value = txn.subcategory;
       }
       onSubcategoryChanged();
 
-      // Pre-select the existing tag
       if (!isIncome && txn.tag) {
         renderModalTagPills(subSelect.value, txn.tag);
       }
@@ -1844,9 +2013,8 @@
       if (!availableCategories.length) {
         subSelect.innerHTML = `<option value="${type === 'Income' ? 'Salary' : 'General'}">${type === 'Income' ? 'Salary' : 'General'}</option>`;
       }
-      // --- DEFAULT SELECTION LOGIC ---
+
       if (type === 'Expense') {
-        // Look for 'Groceries & Household' (or any subcategory containing 'grocer')
         const defaultGroceries = availableCategories.find(c => 
           c.subcategory.toLowerCase().includes('grocer')
         );
@@ -1965,7 +2133,7 @@
             redirect: "follow",
             headers: { "Content-Type": "text/plain;charset=utf-8" },
             body: JSON.stringify({
-              action: "addExpense",
+              action: editId ? "editExpense" : "addExpense",
               data: txnPayload
             })
           });
