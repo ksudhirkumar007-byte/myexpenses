@@ -1167,10 +1167,13 @@
             </div>
           </div>
 
-          <div class="flex items-center gap-2 flex-shrink-0">
+          <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
             <span class="text-sm sm:text-base font-bold font-mono ${isExp ? 'text-rose-400' : 'text-emerald-400'}">
               ${isExp ? '-' : '+'}₹${parseFloat(t.amount).toLocaleString('en-IN')}
             </span>
+            <button onclick="openEditExpenseModal('${t.id}')" title="Edit Entry" class="text-slate-600 hover:text-emerald-400 p-1.5 rounded-lg transition hover:bg-slate-900">
+              <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+            </button>
             <button onclick="deleteTransaction('${t.id}')" title="Delete" class="text-slate-600 hover:text-rose-400 p-1.5 rounded-lg transition hover:bg-slate-900">
               <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
             </button>
@@ -1182,7 +1185,6 @@
 
       lucide.createIcons();
     }
-
     function clearTransactionSearch() {
       document.getElementById('txnSearchInput').value = "";
       renderTransactions();
@@ -1775,6 +1777,41 @@
       document.getElementById('expPaymentModeSelect').value = "UPI";
 
       populateModalSubcategories();
+
+      document.getElementById('expenseModal').classList.remove('hidden');
+      lucide.createIcons();
+      document.getElementById('expAmountInput').focus();
+    }
+    function openEditExpenseModal(id) {
+      const txn = appData.transactions.find(t => t.id === id);
+      if (!txn) return;
+
+      document.getElementById('expenseModalTitle').innerHTML = `<i data-lucide="pencil" class="w-5 h-5 text-emerald-400"></i> Edit Entry`;
+      document.getElementById('expEditId').value = txn.id;
+      document.getElementById('expAmountInput').value = txn.amount;
+      document.getElementById('expDescInput').value = txn.description || "";
+      document.getElementById('expNotesInput').value = txn.notes || "";
+      document.getElementById('expDateInput').value = txn.date;
+      document.getElementById('expPaymentModeSelect').value = txn.paymentMode || "UPI";
+
+      // Match radio type
+      const isIncome = txn.type === 'Income';
+      document.querySelector(`input[name="expType"][value="${isIncome ? 'Income' : 'Expense'}"]`).checked = true;
+
+      // Populate subcategories for that type
+      populateModalSubcategories();
+
+      // Set subcategory value
+      const subSelect = document.getElementById('expSubcatSelect');
+      if (txn.subcategory) {
+        subSelect.value = txn.subcategory;
+      }
+      onSubcategoryChanged();
+
+      // Pre-select the existing tag
+      if (!isIncome && txn.tag) {
+        renderModalTagPills(subSelect.value, txn.tag);
+      }
 
       document.getElementById('expenseModal').classList.remove('hidden');
       lucide.createIcons();
